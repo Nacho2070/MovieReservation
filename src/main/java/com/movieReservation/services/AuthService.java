@@ -2,13 +2,14 @@ package com.movieReservation.services;
 
 import com.movieReservation.DTOs.requestsDTO.LogInRequest;
 import com.movieReservation.DTOs.requestsDTO.UserRegisterRequest;
+import com.movieReservation.exception.exceptions.UserAlreadyExistException;
+import com.movieReservation.exception.exceptions.UserNotExistException;
 import com.movieReservation.models.Roles;
 import com.movieReservation.models.User;
 import com.movieReservation.models.enums.RoleEnum;
 import com.movieReservation.security.JwtUtils;
 import com.movieReservation.services.repository.UserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,47 +17,38 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.Role;
-import javax.naming.Context;
 import javax.naming.NameNotFoundException;
 import java.util.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService implements UserDetailsService {
 
-    private UserRepository userRepository;
-    private JwtUtils jwtUtils;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
+    private final MailSenderService mailSenderService;
 
-
-    public String registerUser(UserRegisterRequest request) throws NameNotFoundException {
+    public void registerUser(UserRegisterRequest request) throws NameNotFoundException {
 
        Optional<User> userOpt = userRepository.findByEmail(request.getEmail());
 
         if (userOpt.isPresent()){
-            throw new NameNotFoundException("User with "+request.getEmail()+"Already exist");
+            throw new UserAlreadyExistException("User with email: "+request.getEmail()+" already Exist");
         }
         User user = new User();
             user.setName(request.getName());
             user.setLastName(request.getLastName());
             user.setEmail(request.getEmail());
 
-            HashSet<Roles> rolesHashSet = new HashSet<>();
+            Set<Roles> rolesHashSet = new HashSet<>();
             Roles role = new Roles();
 
             if(request.getRol() != null){
                 request.getRol().forEach(r -> {
-                    /*
-                    if (!validateRole(r)){
-                                throw new RuntimeException("Wrong role! must be: ADMIN, USER or DEVELOPER");
-                            }
-                      */
                             role.setRoles(RoleEnum.valueOf(r));
                             rolesHashSet.add(role);
                         }
@@ -64,38 +56,24 @@ public class AuthService implements UserDetailsService {
             }else{
                 role.setRoles(RoleEnum.USER);
             }
+
         //user.setRol(rolesHashSet);
-        System.out.println("aca");
         user.setRol(rolesHashSet);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(user);
-
-        return "User Added";
+        mailSenderService.sendEmail(request);
     }
-
-    private boolean validateRole(String r) {
-        switch (r.toUpperCase()) {
-            case "DEVELOPER":
-            case "ADMIN":
-            case "USER":
-                return true;
-            default:
-                return false;
-        }
-    }
-
-
     public String logIn(LogInRequest request) {
 
-        Authentication auth = this.isAuthenticate(request.getUserName(),request.getPassword());
+        Authentication auth = this.isAuthenticate(request.getEmail(),request.getPassword());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return jwtUtils.createToken(auth);
     }
 
-    public Authentication isAuthenticate(String username, String password) {
-        UserDetails userDetails = this.loadUserByUsername(username);
+    public Authentication isAuthenticate(String email, String password) {
+        UserDetails userDetails = this.loadUserByUsername(email);
 
         if (userDetails == null) {
             throw new BadCredentialsException(String.format("Invalid username or password"));
@@ -105,12 +83,12 @@ public class AuthService implements UserDetailsService {
             throw new BadCredentialsException("Incorrect Password");
         }
 
-        return new UsernamePasswordAuthenticationToken(username, password, userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(email, password, userDetails.getAuthorities());
     }
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String email) {
 
-        User userEntity = userRepository.findByName(username)
-                            .orElseThrow(() -> new UsernameNotFoundException("El usuario " + username + " no existe."));
+        User userEntity = userRepository.findByEmail(email)
+                            .orElseThrow(() -> new UserNotExistException("The user with email: " + email + " does not exist."));
 
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
 

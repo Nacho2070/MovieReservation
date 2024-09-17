@@ -1,11 +1,13 @@
-package com.movieReservation.controllers.ProtectedControllers;
+package com.movieReservation.controllers.authenticaded;
 
+import com.movieReservation.DTOs.requestsDTO.MovieRequestDTO;
 import com.movieReservation.DTOs.responseDTO.ReservationResponseDTO;
 import com.movieReservation.DTOs.responseDTO.RoomResponseDTO;
 import com.movieReservation.DTOs.responseDTO.MovieResponseDTO;
 import com.movieReservation.services.MoviesService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +20,13 @@ public class MoviesControllers {
     private final MoviesService moviesService;
 
     @PostMapping("/add")
-    public ResponseEntity<String> addMovie(@RequestBody MovieResponseDTO movie) {
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> addMovie(@RequestBody MovieRequestDTO movie) {
         return moviesService.addMovie(movie);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateMovie(@PathVariable Long id, @RequestBody MovieResponseDTO movie) {
+    public ResponseEntity<String> updateMovie(@PathVariable Long id, @RequestBody MovieRequestDTO movie) {
         return moviesService.updateMovie(id, movie);
     }
 

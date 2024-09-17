@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import java.util.Properties;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -38,17 +42,17 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(http -> http
                         // Public Endpoints
                         .requestMatchers("/auth/register","/auth/log-in", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // User Endpoints
-                        .requestMatchers("/ticketReservation/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/reservation/**").hasAuthority("ROLE_USER")
+                        // User and Admin Endpoints for ticketReservation
+                        .requestMatchers(HttpMethod.POST,"/ticketReservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
+                        .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
                         // Admin Endpoints
-                        .requestMatchers("/movies/admin/**").hasAuthority("ROLE_ADMIN")
-                    .anyRequest().authenticated()
+                        .requestMatchers("/movies/admin/**","/showTime/**").hasAuthority("ROLE_ADMIN")
+                        .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(jwtUtils), BasicAuthenticationFilter.class)
                 .httpBasic(withDefaults())
-
                 .build();
     }
 
@@ -69,4 +73,23 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public MailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("my.gmail@gmail.com");
+        mailSender.setPassword("password");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
+    }
+
 }

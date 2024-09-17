@@ -1,15 +1,17 @@
 package com.movieReservation.services;
 
-import com.movieReservation.DTOs.SeatDTO;
+import com.movieReservation.DTOs.responseDTO.SeatDTO;
+import com.movieReservation.DTOs.requestsDTO.MovieRequestDTO;
+import com.movieReservation.DTOs.responseDTO.MovieResponseDTO;
 import com.movieReservation.DTOs.responseDTO.MovieShowTimeResponseDTO;
 import com.movieReservation.DTOs.responseDTO.RoomResponseDTO;
-import com.movieReservation.DTOs.mapper;
-import com.movieReservation.DTOs.ShowTimeDTO;
+import com.movieReservation.utils.mapper;
+import com.movieReservation.DTOs.responseDTO.ShowTimeDTO;
+import com.movieReservation.exception.exceptions.NotFoundException;
 import com.movieReservation.models.ShowTime;
 import com.movieReservation.services.repository.ShowTimeRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import com.movieReservation.DTOs.responseDTO.MovieResponseDTO;
+
 import com.movieReservation.DTOs.responseDTO.ReservationResponseDTO;
 import com.movieReservation.models.Movies;
 import com.movieReservation.models.Ticket;
@@ -33,7 +35,7 @@ public class MoviesService {
     private final ReservationRepository reservationRepository;
     private final RoomRepository roomRepository;
 
-    public ResponseEntity<String> addMovie (MovieResponseDTO movieDto) {
+    public ResponseEntity<String> addMovie (MovieRequestDTO movieDto) {
 
         Movies movies = new Movies();
 
@@ -42,79 +44,61 @@ public class MoviesService {
         movies.setGenre(movieDto.getGenre());
         movies.setPosterImage(movieDto.getPosterImage());
 
-
-
-        for(ShowTimeDTO moviesDTO : movieDto.getShowTimes()){
-            ShowTime showTime = new ShowTime();
-
-            showTime.setStartTime(moviesDTO.getStartTime());
-            showTime.setShowDate(moviesDTO.getShowDate());
-            showTime.setMovie(movies); // Asociar movie con ShowTime
-
-            showTimeRepository.save(showTime);
-
-            //movies.getShowTime().add(showTime);
-
-        }
-
-
-
+        movieRepository.save(movies);
 
         return ResponseEntity.ok("Movie added successfully");
     }
 
 
-    public ResponseEntity<String> updateMovie(Long id, MovieResponseDTO movie) {
-        try {
+    public ResponseEntity<String> updateMovie(Long id, MovieRequestDTO movie) {
+
             Optional<Movies> optionalMovie = movieRepository.findById(id);
             if(optionalMovie.isPresent()){
-                Movies movieEntiy = optionalMovie.get();
+                Movies movieEntity = optionalMovie.get();
                     movie.setName(movie.getName());
                     movie.setDescription(movie.getDescription());
                     movie.setGenre(movie.getGenre());
                     movie.setPosterImage(movie.getPosterImage());
 
-                movieRepository.save(movieEntiy);
+                movieRepository.save(movieEntity);
                 return ResponseEntity.ok("Movie updated successfully");
             }
-
-        } catch (EntityNotFoundException e){
-            throw e;
-        }
-        return ResponseEntity.ok("Error");
+        throw  new NotFoundException("Movie with id: "+id+" does not exist");
     }
 
     public ResponseEntity<String> deleteMovie(Long id) {
 
-        try {
+
             Optional<Movies> moviesOptional = movieRepository.findById(id);
             if(moviesOptional.isPresent()){
                 movieRepository.deleteById(id);
+                return ResponseEntity.ok("Movie deleted successfully");
             }
-            return ResponseEntity.ok("Movie deleted successfully");
-        } catch (EntityNotFoundException e){
-            throw e;
-        }
+
+            throw new NotFoundException("Movie with id: "+id+" does not exist");
     }
 
     public List<MovieResponseDTO> getAllMovies() {
         List<Movies> movie = movieRepository.findAll();
 
-        if(movie.isEmpty()){throw new RuntimeException("Not Movies Exception");};
+        if(movie.isEmpty()){throw new NotFoundException("There not movies");};
 
         return moviesToMoviesDTO(movie);
     }
 
     public List<ReservationResponseDTO> getAllReservations() {
-        List<Ticket> tickets = reservationRepository.findAll();
 
-        return mapper.reservationToReservationDto(tickets);
+        List<Ticket> tickets = reservationRepository.findAll();
+        if(tickets != null){
+            return mapper.reservationToReservationDto(tickets);
+        }
+        throw new NotFoundException("Without reservations");
 
     }
     // Obtener la capacidad total de las salas
     public RoomResponseDTO calculateTotalCapacity(Long roomId) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(()-> new RuntimeException("Room not found"));
+                .orElseThrow(()-> new NotFoundException("Without reservations"));
 
         return mapper.roomToDTO(room);
     }
@@ -123,12 +107,13 @@ public class MoviesService {
 
         List<Movies> moviesAndShowTime = movieRepository.findAll();
         return mapper.getMoviesAndShowTimes(moviesAndShowTime);
+
     }
 
     public List<SeatDTO> getAvailableSeats(Long showtimeId) {
 
         ShowTime showTime = showTimeRepository.findById(showtimeId)
-                .orElseThrow( () -> new RuntimeException("Id not found"));
+                .orElseThrow( () -> new NotFoundException("Id not found"));
 
 
         return mapper.allSeatByShowIdDTO(showTime);

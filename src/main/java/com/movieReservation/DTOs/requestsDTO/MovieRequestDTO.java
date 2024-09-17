@@ -1,17 +1,14 @@
-package com.movieReservation.DTOs.responseDTO;
+package com.movieReservation.DTOs.requestsDTO;
+
 
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
-public class MovieResponseDTO {
-    private String movieId;
+public class MovieRequestDTO {
     private String name;
     private String description;
     private String genre;
     private String posterImage;
-    private List<ShowTimeDTO> showTimes;
 }

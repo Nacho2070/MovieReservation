@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "Ticket")
-public class Ticket {
+public class Ticket{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

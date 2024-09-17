@@ -1,8 +1,9 @@
 package com.movieReservation.services;
 
-import com.movieReservation.DTOs.mapper;
+import com.movieReservation.utils.mapper;
 import com.movieReservation.DTOs.requestsDTO.ReservationRequestDTO;
 import com.movieReservation.DTOs.responseDTO.TicketResponse;
+import com.movieReservation.exception.exceptions.NotFoundException;
 import com.movieReservation.models.*;
 import com.movieReservation.models.enums.Status;
 import com.movieReservation.services.repository.TicketRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.movieReservation.services.repository.ShowTimeRepository;
 import com.movieReservation.services.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +30,7 @@ public class TicketService {
 
         if(showTimeOpt.isEmpty() || userOpt.isEmpty()){
             //Need to implement the Custom Exception
-            throw new EmptyStackException();
+            throw new NotFoundException("ShowTime id or user id is not correct");
         }
 
         User user = userOpt.get();
@@ -72,17 +74,15 @@ public class TicketService {
         return true;
     }
 
-    private List<ShowSeats> setReservesSeats( ShowTime showTime,List<String> seatDTO){
-        List<ShowSeats> showSeats =  showTime.getShowSeats();
-        for (ShowSeats showSeats1 : showSeats){
+    private List<ShowSeats> setReservesSeats( ShowTime showTime, List<String> seatDTO){
+        List<ShowSeats> showSeats = new ArrayList<>();
+        for (ShowSeats showSeats1 : showTime.getShowSeats()){
             if(seatDTO.contains(showSeats1.getSeatNo())){
-                Seats seats = Seats.builder()
-                        .isAvailable(Boolean.FALSE)
-                        .build();
                 showSeats1.setIsAvailable(Boolean.FALSE);
-
-                showTime.getRoom().getSeats().add(seats);
+                showSeats.add(showSeats1);
             }
+            showTime.setShowSeats(showSeats);
+
         }
         return showSeats;
     }

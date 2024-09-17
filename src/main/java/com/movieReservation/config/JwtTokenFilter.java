@@ -45,7 +45,7 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             String stringAuthorities = jwtUtils.getSpecificClaim(decodedJWT, "authorities").asString();
 
             Collection<? extends GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(stringAuthorities);
-            System.out.println("The user got: "+ authorities);
+            logger.info("The user got: "+ authorities);
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             // We need the GrantedAuthority inside Authentication to validate if the credential matches with the given values
             Authentication authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);

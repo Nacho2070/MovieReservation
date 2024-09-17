@@ -1,4 +1,4 @@
-package com.movieReservation.DTOs;
+package com.movieReservation.DTOs.responseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

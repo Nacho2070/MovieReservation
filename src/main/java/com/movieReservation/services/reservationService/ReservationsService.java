@@ -1,12 +1,11 @@
 package com.movieReservation.services.reservationService;
 
-import com.movieReservation.DTOs.mapper;
+import com.movieReservation.utils.mapper;
 import com.movieReservation.DTOs.requestsDTO.UserTicketRequestDTO;
 import com.movieReservation.DTOs.responseDTO.TicketResponse;
 import com.movieReservation.models.Ticket;
 import com.movieReservation.models.User;
 import com.movieReservation.models.enums.Status;
-import com.movieReservation.services.repository.ShowTimeRepository;
 import com.movieReservation.services.repository.TicketRepository;
 import com.movieReservation.services.repository.UserRepository;
 import lombok.AllArgsConstructor;

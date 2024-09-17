@@ -6,7 +6,6 @@ import lombok.Data;
 
 import java.util.Date;
 
-//reserve seats for a showtime
 @Data
 @Builder
 public class ReservationResponseDTO {

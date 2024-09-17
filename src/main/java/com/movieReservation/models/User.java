@@ -1,9 +1,8 @@
 package com.movieReservation.models;
 
-import com.movieReservation.models.enums.RoleEnum;
 import lombok.*;
 import jakarta.persistence.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,7 +13,7 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name= "Users")
+@Entity(name= "users")
 public class User {
 
     @Id

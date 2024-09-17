@@ -9,17 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Seats {
+public class Seats  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seatsId;
-    private Boolean isAvailable;
     private String seatNo;
-
     @ManyToOne
     private Room room;
-
-    public void setAvailable(Boolean available) {
-        isAvailable = available;
-    }
 }

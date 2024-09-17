@@ -1,4 +1,4 @@
-package com.movieReservation.DTOs;
+package com.movieReservation.utils;
 
 import com.movieReservation.DTOs.responseDTO.*;
 import com.movieReservation.models.*;
@@ -20,14 +20,12 @@ public class mapper {
         roomDTO.setSeats(seatDTOs);
 
         roomDTO.setRoomName(room.getRoomName());
-        roomDTO.setCapacity(room.getCapacity());
 
         return roomDTO;
     }
     public static SeatDTO mapToSeatDTO(Seats seat) {
         return  SeatDTO.builder()
                 .seatNo(seat.getSeatNo())
-                .isAvailable(seat.getIsAvailable())
                 .build();
     }
     public static List<SeatDTO> allSeatByShowIdDTO(ShowTime showTime) {
@@ -72,6 +70,7 @@ public class mapper {
             }
 
             MovieResponseDTO movieResponseDTO = MovieResponseDTO.builder()
+                    .movieId(movie.getMovieId() != null ? movie.getMovieId().toString() : null)
                     .name(movie.getName())
                     .description(movie.getDescription())
                     .genre(movie.getGenre())
@@ -104,6 +103,7 @@ public class mapper {
 
 
         public static List<TicketResponse> allticketResponseMap(List<Ticket> tickets) {
+
             return tickets.stream()
                     .map(ticket -> TicketResponse.builder()
                             .user(ticket.getUser().getName() + " " + ticket.getUser().getLastName())

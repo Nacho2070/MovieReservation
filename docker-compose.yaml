@@ -1,0 +1,15 @@
+version: '3.1'
+
+services:
+  db_movie_reservation:
+    container_name: movie_reservation_db
+    image: mysql:8.0.33
+    environment:
+        MYSQL_USER: user
+        MYSQL_PASSWORD: movieBooking123
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: movie_booking_db
+    ports:
+      - 3307:3306
+    expose:
+        - 3306

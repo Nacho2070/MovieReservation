@@ -6,23 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
 @Entity(name= "Room")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+public class Room  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     private String roomName;
-    private Long capacity;
+    private String address;
 
     @OneToMany(mappedBy = "room")
-    private List<Seats> seats = new ArrayList<>();
+    private Set<Seats> seats = new HashSet<>();
 
     @OneToMany(mappedBy = "room")
     private List<ShowTime> showTimes  = new ArrayList<>();

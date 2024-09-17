@@ -1,9 +1,11 @@
 package com.movieReservation.DTOs.requestsDTO;
 
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class LogInRequest {
-    private String userName;
+    private String email;
     private String password;
 }

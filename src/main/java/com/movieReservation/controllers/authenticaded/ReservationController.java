@@ -1,4 +1,4 @@
-package com.movieReservation.controllers.ProtectedControllers;
+package com.movieReservation.controllers.authenticaded;
 
 import com.movieReservation.DTOs.requestsDTO.UserTicketRequestDTO;
 import com.movieReservation.DTOs.responseDTO.MovieShowTimeResponseDTO;
