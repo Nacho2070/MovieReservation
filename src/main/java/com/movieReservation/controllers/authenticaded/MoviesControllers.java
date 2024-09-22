@@ -14,13 +14,12 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/movies/admin")
+@RequestMapping("/movies")
 public class MoviesControllers {
 
     private final MoviesService moviesService;
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> addMovie(@RequestBody MovieRequestDTO movie) {
         return moviesService.addMovie(movie);
     }

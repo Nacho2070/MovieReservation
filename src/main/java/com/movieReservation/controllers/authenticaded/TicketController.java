@@ -16,7 +16,6 @@ public class TicketController {
 
     @PostMapping("/reserveSeats")
     public ResponseEntity<TicketResponse> reserveSeats(@RequestBody ReservationRequestDTO reservationRequest) {
-        System.out.println("Ticket sda");
         return ResponseEntity.ok(ticketService.reserveSeats(reservationRequest));
     }
 

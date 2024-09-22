@@ -1,4 +1,4 @@
-package com.movieReservation.services.reservationService;
+package com.movieReservation.services;
 
 import com.movieReservation.utils.mapper;
 import com.movieReservation.DTOs.requestsDTO.UserTicketRequestDTO;

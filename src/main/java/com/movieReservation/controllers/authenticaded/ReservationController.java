@@ -4,7 +4,7 @@ import com.movieReservation.DTOs.requestsDTO.UserTicketRequestDTO;
 import com.movieReservation.DTOs.responseDTO.MovieShowTimeResponseDTO;
 import com.movieReservation.DTOs.responseDTO.TicketResponse;
 import com.movieReservation.services.MoviesService;
-import com.movieReservation.services.reservationService.ReservationsService;
+import com.movieReservation.services.ReservationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

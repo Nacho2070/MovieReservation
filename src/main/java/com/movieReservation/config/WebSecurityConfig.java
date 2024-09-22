@@ -46,7 +46,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/ticketReservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
                         .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
                         // Admin Endpoints
-                        .requestMatchers("/movies/admin/**","/showTime/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/movies/**","/showTime/**", "/room/**").hasAuthority("ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
 
