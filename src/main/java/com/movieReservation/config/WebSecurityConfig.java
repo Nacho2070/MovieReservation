@@ -43,10 +43,10 @@ public class WebSecurityConfig {
                         // Public Endpoints
                         .requestMatchers("/auth/register","/auth/log-in", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // User and Admin Endpoints for ticketReservation
-                        .requestMatchers(HttpMethod.POST,"/ticketReservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
-                        .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/ticketReservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
+                        .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
                         // Admin Endpoints
-                        .requestMatchers("/movies/**","/showTime/**", "/room/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/movies/**","/showTime/**", "/room/**").hasAuthority("ROLE_ADMIN","ROLE_DEVELOPER")
                         .anyRequest().authenticated()
                 )
 
