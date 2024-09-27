@@ -1,6 +1,18 @@
 version: '3.1'
 
 services:
+  MovieReservation:
+    build: movieReservation
+    ports:
+      - 8080:8080
+    environment:
+      DB_URL: jdbc:mysql://db_movie_reservation:3306/movie_booking_db?serverTimezone=UTC
+      BD_USER_NAME: user
+      DB_PASSWORD: movieBooking123
+    depends_on:
+      db_movie_reservation:
+        condition: service_healthy
+
   db_movie_reservation:
     container_name: movie_reservation_db
     image: mysql:8.0.33
