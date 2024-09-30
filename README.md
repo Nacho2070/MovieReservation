@@ -71,4 +71,10 @@ The following endpoints are restricted to users with the `ROLE_ADMIN` or `ROLE_D
 3. **Rooms**
    - **URL:** `/room/**`
    - **Description:** Allows admins to manage cinema and room seating.
-         
+           
+## UML:
+![image](https://github.com/user-attachments/assets/22fdd530-7253-4910-ad1f-469c40dd9c0b)
+
+
+
+
