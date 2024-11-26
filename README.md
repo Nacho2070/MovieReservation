@@ -1,9 +1,27 @@
-# App Endpoint Instructions
-## SwaggerDoc Link: http://localhost:8080/swagger-ui/index.html
+# Movie Reservation System
+### The Movie Reservation Service is a backend system designed to provide a seamless experience for managing movie showtimes and seat reservations. It enables users to:
+## Features
+- **User Authentication**
+   - Secure sign-up and login system.
+   - Role-based access for admins and regular users.
 
+- **Movie and Showtime Management**
+   - Admins can add, update, or delete movies and showtimes.
+   - Movies are categorized by genres and include descriptions and poster images.
+
+- **Seat Reservation**
+   - Users can browse available movies and reserve specific seats for showtimes.
+   - Users can view and cancel their reservations.
+
+- **Reporting Tools**
+   - Admins can monitor reservations, capacity, and revenue
+
+## SwaggerDoc Link: 
+## Local: 
+### http://localhost:8080/swagger-ui/index.html#
 ## Technologies Used
 - Java with Spring boot
-- Docker for app and SQL database
+- Docker to containerize the application and SQL database
 - Spring Security for authentication and authorization using JWT
 - Unit and Integration Testing with Mockito and JUnit
 - The application is located in render

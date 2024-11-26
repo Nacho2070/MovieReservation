@@ -47,6 +47,7 @@ public class WebSecurityConfig {
                         // User and Admin Endpoints for ticketReservation
                         .requestMatchers(HttpMethod.POST,"/ticketReservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
                         .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
+                        .requestMatchers(HttpMethod.GET,"/movies").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
                         // Admin Endpoints
                         .requestMatchers("/movies/**","/showTime/**", "/room/**").hasAnyAuthority("ROLE_ADMIN","ROLE_DEVELOPER")
                         .anyRequest().authenticated()
