@@ -16,7 +16,8 @@
 - **Reporting Tools**
    - Admins can monitor reservations, capacity, and revenue
 
-## SwaggerDoc Link: 
+## SwaggerDoc Link:
+### https://movie-reservation-combined-v1.onrender.com/swagger-ui/index.html#
 ## Local: 
 ### http://localhost:8080/swagger-ui/index.html#
 ## Technologies Used
