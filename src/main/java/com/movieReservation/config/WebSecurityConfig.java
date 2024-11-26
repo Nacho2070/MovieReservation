@@ -15,6 +15,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -38,10 +39,11 @@ public class WebSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-
                 .authorizeHttpRequests(http -> http
                         // Public Endpoints
-                        .requestMatchers("/auth/register","/auth/log-in", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         // User and Admin Endpoints for ticketReservation
                         .requestMatchers(HttpMethod.POST,"/ticketReservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
                         .requestMatchers("/reservation/**").hasAnyAuthority("ROLE_USER","ROLE_ADMIN","ROLE_DEVELOPER")
@@ -49,10 +51,8 @@ public class WebSecurityConfig {
                         .requestMatchers("/movies/**","/showTime/**", "/room/**").hasAnyAuthority("ROLE_ADMIN","ROLE_DEVELOPER")
                         .anyRequest().authenticated()
                 )
-
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenFilter(jwtUtils), BasicAuthenticationFilter.class)
-                .httpBasic(withDefaults())
                 .build();
     }
 

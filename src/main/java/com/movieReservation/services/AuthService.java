@@ -49,15 +49,15 @@ public class AuthService implements UserDetailsService {
 
             if(request.getRol() != null){
                 request.getRol().forEach(r -> {
-                            role.setRoles(RoleEnum.valueOf(r));
+                            role.setRoles(r);
                             rolesHashSet.add(role);
                         }
                 );
             }else{
+                // Default Role
                 role.setRoles(RoleEnum.USER);
             }
 
-        //user.setRol(rolesHashSet);
         user.setRol(rolesHashSet);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 

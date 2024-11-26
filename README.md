@@ -1,10 +1,12 @@
 # App Endpoint Instructions
+## SwaggerDoc Link: http://localhost:8080/swagger-ui/index.html
 
 ## Technologies Used
 - Java with Spring boot
-- Docker
+- Docker for app and SQL database
 - Spring Security for authentication and authorization using JWT
 - Unit and Integration Testing with Mockito and JUnit
+- The application is located in render
 ---
 
 #### Note: Only the Auth endpoints are available to unauthenticated users, access to others requires a token

@@ -1,17 +1,20 @@
 version: '3.1'
 
 services:
-  MovieReservation:
-    build: movieReservation
+  app:
+    container_name: movie_reservation_app
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - "8080:8080"
     environment:
-      DB_URL: jdbc:mysql://db_movie_reservation:3306/movie_booking_db?serverTimezone=UTC
-      BD_USER_NAME: user
-      DB_PASSWORD: movieBooking123
+      - SPRING_DATASOURCE_URL=jdbc:mysql://movie_reservation_db:3306/movie_booking_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=movieBooking123
     depends_on:
-      db_movie_reservation:
-        condition: service_healthy
+      - db_movie_reservation
+    restart: unless-stopped
 
   db_movie_reservation:
     container_name: movie_reservation_db
@@ -23,5 +26,4 @@ services:
         MYSQL_DATABASE: movie_booking_db
     ports:
       - 3307:3306
-    expose:
-        - 3306
+    restart: unless-stopped

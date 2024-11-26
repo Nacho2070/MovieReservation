@@ -1,5 +1,6 @@
 package com.movieReservation.exception;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.movieReservation.exception.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,5 +32,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> userNotExistException(UserNotExistException exception, WebRequest webRequest){
         return new ResponseEntity<>(new ErrorDetail(new Date(), exception.getMessage(), webRequest.getDescription(false)), HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler({JWTVerificationException.class})
+    public ResponseEntity<?> userNotExistException(JWTVerificationException exception, WebRequest webRequest){
+        return new ResponseEntity<>(new ErrorDetail(new Date(), exception.getMessage(), webRequest.getDescription(false)), HttpStatus.NOT_FOUND);
+    }
+
+
+
 }
 

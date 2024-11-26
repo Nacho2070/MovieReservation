@@ -17,6 +17,6 @@ public class UserRegisterRequest {
     private String name;
     private String lastName;
     private String email;
-    private List<String> rol;
+    private List<RoleEnum> rol;
     private String password;
 }
