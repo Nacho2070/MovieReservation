@@ -16,6 +16,9 @@
 - **Reporting Tools**
    - Admins can monitor reservations, capacity, and revenue
 
+- **Singleton Pattern**
+  - The application leverages the Singleton design pattern to ensure that key components such as configuration managers and utility services have a single shared instance across the system.
+
 ## SwaggerDoc Link:
 ### https://movie-reservation-combined-v1.onrender.com/swagger-ui/index.html#
 ## Local: 
